@@ -1,0 +1,168 @@
+body {
+  align-items: center;
+  justify-content: center;
+  background: #333;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  color: #fff;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 800px;
+  width: 90%;
+}
+
+header {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+
+h2 {
+  color: #fff;
+  margin: 0 0 1em;
+}
+
+nav {
+  flex: 1;
+}
+nav ul {
+  display: flex;
+  justify-content: space-between;
+  list-style: none outside none;
+  margin: 0;
+  padding: 0;
+}
+
+.button {
+  background-color: transparent;
+  border: 2px solid transparent;
+  border-radius: 2em;
+  color: #757575;
+  cursor: pointer;
+  font-size: 0.875em;
+  font-weight: 500;
+  line-height: 2em;
+  padding: 0 1em;
+  text-transform: uppercase;
+  transition: color 0.3s ease-in-out, border 0.3s ease-in-out;
+  user-select: none;
+}
+.button:focus {
+  outline: thin dotted;
+}
+
+.active {
+  color: #fff;
+}
+.active:nth-child(1) {
+  border-color: #52d6c5;
+}
+.active:nth-child(2) {
+  border-color: #bde694;
+}
+
+.chart {
+  align-items: flex-end;
+  display: flex;
+  height: 200px;
+  justify-content: space-around;
+  margin: auto;
+}
+.chart div {
+  background: #52d6c5;
+  border-radius: 16px;
+  height: 200px;
+  position: relative;
+  transition: height 0.4s ease-in-out, background-color 0.4s ease-in-out;
+  width: 2%;
+}
+.chart div.show {
+    display:block;
+}
+.chart div.none {
+    display:none;
+}
+.chart div::after {
+  bottom: -2em;
+  color: #757575;
+  position: absolute;
+  text-align: center;
+  content:  attr(data-auth);
+}
+
+
+.dbf div {
+  background: #35f027;
+}
+.luci div {
+    background-color: rgb(215, 255, 38);
+}
+.st div {
+    background-color: rgb(255, 0, 0);
+}
+.crazy div {
+    background-color: rgb(43, 188, 255);
+}
+.fits div {
+    background-color: rgb(239, 107, 31);
+}
+.cp div {
+    background-color: rgb(121, 20, 210);
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  margin: 3em 0 0;
+  text-transform: uppercase;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.stats div {
+  text-align: center;
+  width: 50%;
+}
+.stats span:nth-child(1) {
+  color: #757575;
+}
+.stats span:nth-child(2) {
+  display: block;
+  font-size: 2em;
+}
+
+@media (min-width: 320px) {
+  h2 {
+    font-size: 1.2em;
+    margin: 0;
+  }
+  nav {
+    flex: 0.5;
+  }
+  .chart div:nth-child(odd)::after {
+    content: attr(data-auth);
+  }
+  .stats {
+    flex: 1;
+  }
+}
+
+@media (min-width: 620px) {
+  h2 {
+    font-size: 1.5em;
+  }
+  .chart div::after {
+    content: attr(data-auth);
+  }
+  .stats div {
+    width: 25%;
+  }
+}
