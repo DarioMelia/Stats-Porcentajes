@@ -4,7 +4,8 @@ body {
   align-items: center;
   justify-content: center;
   background: #333;
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   overflow: hidden;
   display: flex;
   color: #fff;
@@ -22,6 +23,7 @@ header {
   flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 1em;
+  overflow: hidden;
 }
 
 h2 {
@@ -46,7 +48,8 @@ nav ul {
   border-radius: 2em;
   color: #757575;
   cursor: pointer;
-  font-size: 0.875em;
+  
+  font-size: clamp(.4rem,3vw,1.75rem);
   font-weight: 500;
   line-height: 2em;
   padding: 0 1em;
@@ -82,7 +85,6 @@ nav ul {
   position: relative;
   transition: height 0.4s ease-in-out, background-color 0.4s ease-in-out;
   width: 2%;
-  cursor:n-resize;
 }
 .chart div.show {
     display:flex;
@@ -100,37 +102,40 @@ nav ul {
 .chart div::after {
   bottom: -2em;
   color: #8e8e8e;
+  font-size: clamp(.8rem,3vw,1.5rem);
   content:  attr(data-auth);
 }
 
-.chart div::before{
+/* .chart div::before{
   top: -1.5rem;
   content: attr(data-val) "%";
-}
+} */
 
 .prc-input{
+  font-family: 'Quicksand', sans-serif;
   top: -1.5rem;
   background:none;
   border:none;
   position:absolute;
-  width:2rem;
+  width:4rem;
+  color:white;
+  text-align: center;
 
 }
 
 .operator-btns{
   position:absolute;
   display:flex;
-  gap:2rem;
+  gap:clamp(.2rem, 1.5vw, 2rem);
   bottom:0;
-  
- 
 }
 
 .operator-btns button{
   background: none;
   border:none;
   color:white;
-  font-size: 1.5rem;
+  font-size: clamp(.5rem, 4vw, 1.7rem);
+  cursor: pointer;
   
 }
 
@@ -156,26 +161,15 @@ nav ul {
 
 footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin: 3em 0 0;
   text-transform: uppercase;
 }
 
-.stats {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-.stats div {
-  text-align: center;
-  width: 50%;
-}
-.stats span:nth-child(1) {
-  color: #757575;
-}
-.stats span:nth-child(2) {
-  display: block;
-  font-size: 2em;
+.percentaje{
+  font-family: 'Quicksand', sans-serif;
+  font-size: 3rem;
+
 }
 
 @media (min-width: 320px) {
