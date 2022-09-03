@@ -123,9 +123,8 @@ function changeValHandler(e){
 }
 
 function sendHandler(e){
-  if(confirm("Si acpetas se descargará un archivo con la información que hayas cambiado. Tambien se abre tu aplicación de correo, manda ese archivo por ahí o el grupo de wpp.")){
+  if(confirm("Si acpetas se descargará un archivo con la información que hayas cambiado, mandame ese archivo por el grupo, correo o como prefieras.")){
     download("porcentajesCanciones.txt",JSON.stringify(songs))
-    window.location.href = "mailto:dario@meliabasus.com"
   }
   
 }
