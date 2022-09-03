@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+
 body {
   align-items: center;
   justify-content: center;
@@ -69,7 +71,7 @@ nav ul {
 .chart {
   align-items: flex-end;
   display: flex;
-  height: 200px;
+  min-height: 200px;
   justify-content: space-around;
   margin: auto;
 }
@@ -80,19 +82,56 @@ nav ul {
   position: relative;
   transition: height 0.4s ease-in-out, background-color 0.4s ease-in-out;
   width: 2%;
+  cursor:n-resize;
 }
 .chart div.show {
-    display:block;
+    display:flex;
+    justify-content: center;
 }
 .chart div.none {
     display:none;
 }
+
+.chart div::after,
+.chart div::before{
+  font-family: 'Quicksand', sans-serif;
+  position:absolute;
+}
 .chart div::after {
   bottom: -2em;
-  color: #757575;
-  position: absolute;
-  text-align: center;
+  color: #8e8e8e;
   content:  attr(data-auth);
+}
+
+.chart div::before{
+  top: -1.5rem;
+  content: attr(data-val) "%";
+}
+
+.prc-input{
+  top: -1.5rem;
+  background:none;
+  border:none;
+  position:absolute;
+  width:2rem;
+
+}
+
+.operator-btns{
+  position:absolute;
+  display:flex;
+  gap:2rem;
+  bottom:0;
+  
+ 
+}
+
+.operator-btns button{
+  background: none;
+  border:none;
+  color:white;
+  font-size: 1.5rem;
+  
 }
 
 
@@ -147,9 +186,7 @@ footer {
   nav {
     flex: 0.5;
   }
-  .chart div:nth-child(odd)::after {
-    content: attr(data-auth);
-  }
+
   .stats {
     flex: 1;
   }
@@ -159,9 +196,7 @@ footer {
   h2 {
     font-size: 1.5em;
   }
-  .chart div::after {
-    content: attr(data-auth);
-  }
+  
   .stats div {
     width: 25%;
   }

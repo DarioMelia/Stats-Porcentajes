@@ -21,7 +21,9 @@
           if (div.dataset.auth.toLowerCase() === member){
             div.classList.contains("none")?div.classList.remove("none"):null
             div.classList.add("show")
-            div.style.height = `${song.prc[member].val * 9 }px`
+            div.style.height = `${song.prc[member].val * 8 }px`
+            div.dataset.val = song.prc[member].val
+            div.dataset.msg =song.prc[member].msg
             
           }
         }
@@ -34,12 +36,12 @@
           resetButtons()
           show(songs[i])
           btn.classList.add("active")
-          
         })
       })
+        // document.querySelector("body").addEventListener("mousemove", divExpandHandler)
     }
 
-    return { init, addEvListeners}
+    return { init, addEvListeners, show}
   })()
   
 
@@ -65,6 +67,22 @@
     if(btn.classList.contains("active")){btn.classList.remove("active")}
   })
  }
+
+//  let prevY = 0
+//  function divExpandHandler(e){
+//   if((e.buttons === 1 || e.type === "click") && e.target.dataset.auth ){
+//     songs.forEach(song => {
+//       if(song.name === chart.classList[1]){
+//         prevY < e.y?
+//         song.prc[e.target.dataset.auth.toLowerCase()].val -= Math.round(e.offsetY/80):
+//         song.prc[e.target.dataset.auth.toLowerCase()].val += Math.round(e.offsetY/80)
+//         chartObj.show(song)
+//       }
+//     })
+//     console.log(e)
+//     prevY = e.y
+//   }
+//  }
 
 
 
