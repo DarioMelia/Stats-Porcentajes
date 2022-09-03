@@ -1,4 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Shadows+Into+Light&display=swap');
+
+
+:root{
+  --send-btn-clr: rgb(30, 154, 165);
+  --dbf:#35f027;
+  --luci:rgb(206, 183, 35);
+  --st:rgb(255, 0, 0);
+  --crazy:rgb(43, 188, 255);
+  --fits:rgb(239, 107, 31);
+  --cp: rgb(121, 20, 210);
+}
 
 body {
   align-items: center;
@@ -151,35 +162,52 @@ nav ul {
 
 
 .dbf div {
-  background: #35f027;
+  background: var(--dbf);
 }
 .luci div {
-    background-color: rgb(215, 255, 38);
+    background-color: var(--luci);
 }
 .st div {
-    background-color: rgb(255, 0, 0);
+    background-color: var(--st);
 }
 .crazy div {
-    background-color: rgb(43, 188, 255);
+    background-color: var(--crazy);
 }
 .fits div {
-    background-color: rgb(239, 107, 31);
+    background-color: var(--fits);
 }
 .cp div {
-    background-color: rgb(121, 20, 210);
+    background-color: var(--cp);
 }
 
 footer {
+  font-family: 'Quicksand', sans-serif;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   margin: 3em 0 0;
   text-transform: uppercase;
 }
 
 .percentaje{
-  font-family: 'Quicksand', sans-serif;
   font-size: 3rem;
+  font-family: 'Shadows Into Light', cursive;
+}
 
+.send-btn{
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.5rem;
+  padding:.4rem .8rem;
+  border:4px var(--send-btn-clr) solid;
+  color: var(--send-btn-clr);
+  box-shadow: 0px 1px 8px -0.2px #000;
+  cursor: pointer;
+  border-radius:3px;
+}
+.send-btn:hover{
+  background:var(--send-btn-clr);
+  color: white;
+  transition: 0.9s;
 }
 
 @media (min-width: 320px) {

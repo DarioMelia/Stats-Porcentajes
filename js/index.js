@@ -7,6 +7,7 @@ const divs = chart.querySelectorAll('div')
 const buttons = document.querySelectorAll('nav button')
 const inputs = document.querySelectorAll("input.prc-input")
 const operatorBtns = document.querySelectorAll(".btn--change-val")
+const sendBtn= document.querySelector(".send-btn")
 
 const chartObj = (function () {
 
@@ -27,6 +28,7 @@ const chartObj = (function () {
           div.dataset.val = song.prc[member].val
           div.dataset.msg = song.prc[member].msg
           div.querySelector("input").value = `${song.prc[member].val}%`
+          changeSendBtnColor(song.name)
         }
       }
     })
@@ -46,6 +48,8 @@ const chartObj = (function () {
       operatorBtns.forEach(btn => {
         btn.addEventListener("click",changeValHandler)
       })
+
+      sendBtn.addEventListener("click",sendHandler)
     })
     // document.querySelector("body").addEventListener("mousemove", divExpandHandler)
   }
@@ -83,15 +87,15 @@ function inputChangeHandler(e) {
   const div = e.target.parentElement
   const key = e.code
   if (key.includes("Digit") || key.includes("Numpad")) {
-    song.prc[div.dataset.auth.toLowerCase()].val = parseInt(e.target.value)
+    song.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
   } else if (key === "Enter") {
     if (e.target.value.includes("%")) {
       e.target.value.replace("%", "")
     }
     let prevSong = {...song}
-    prevSong.prc[div.dataset.auth.toLowerCase()].val = parseInt(e.target.value)
+    prevSong.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
     if (lessThan100(prevSong)) {
-      song.prc[div.dataset.auth.toLowerCase()].val = parseInt(e.target.value)
+      song.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
       chartObj.show(song)
     }
   } else if (key.includes("Arrow") || key === "Backspace") {
@@ -106,16 +110,24 @@ function changeValHandler(e){
   const div = e.target.parentElement.parentElement
   let prevSong = JSON.parse(JSON.stringify(song))
   if(this.innerHTML === "+"){
-    prevSong.prc[div.dataset.auth.toLowerCase()].val+=1
+    prevSong.prc[div.dataset.auth.toLowerCase()].val+=0.5
     console.log(song.prc[div.dataset.auth.toLowerCase()])
     lessThan100(prevSong)?
-      song.prc[div.dataset.auth.toLowerCase()].val+=1:
+      song.prc[div.dataset.auth.toLowerCase()].val+=0.5:
       null
   }else{
     lessThan100(song)
-    song.prc[div.dataset.auth.toLowerCase()].val-=1
+    song.prc[div.dataset.auth.toLowerCase()].val-=0.5
   }
   chartObj.show(song)
+}
+
+function sendHandler(e){
+  if(confirm("Si acpetas se descargará un archivo con la información que hayas cambiado. Tambien se abre tu aplicación de correo, manda ese archivo por ahí o el grupo de wpp.")){
+    download("porcentajesCanciones.txt",JSON.stringify(songs))
+    window.location.href = "mailto:dario@meliabasus.com"
+  }
+  
 }
 
 //  let prevY = 0
@@ -134,6 +146,11 @@ function changeValHandler(e){
 //   }
 //  }
 
+function changeSendBtnColor(name){
+  const newColor = getComputedStyle(document.documentElement).getPropertyValue(`--${name}`)
+  document.documentElement.style
+    .setProperty('--send-btn-clr', newColor)
+}
 function getSong(name) {
   let selectedSong
   songs.forEach(song => {
@@ -148,12 +165,25 @@ function lessThan100(song) {
   const members = Object.values(song.prc)
   const totalPrc = members.reduce((acc, el) => acc + el.val, 0)
   const prcDisplay = document.querySelector(".percentaje")
-  prcDisplay.innerHTML = `${totalPrc-1}%`
+  prcDisplay.innerHTML = `${totalPrc-0.5}%`
   if (totalPrc <= 100) {
     return true
   } else {
     return false
   }
+}
+
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
 }
 
 
