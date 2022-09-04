@@ -5,8 +5,8 @@
 const chart = document.getElementsByClassName('chart')[0]
 const divs = chart.querySelectorAll('div')
 const buttons = document.querySelectorAll('nav button')
-const inputs = document.querySelectorAll("input.prc-input")
-const operatorBtns = document.querySelectorAll(".btn--change-val")
+const txtInputs = document.querySelectorAll("input.prc-input")
+const rangeInputs = document.querySelectorAll("input.slider")
 const sendBtn= document.querySelector(".send-btn")
 
 const chartObj = (function () {
@@ -27,7 +27,9 @@ const chartObj = (function () {
           div.style.height = `${song.prc[member].val * 8}px`
           div.dataset.val = song.prc[member].val
           div.dataset.msg = song.prc[member].msg
-          div.querySelector("input").value = `${song.prc[member].val}%`
+          div.querySelector("input.prc-input").value = `${song.prc[member].val}%`
+          div.querySelector("input.slider").value = song.prc[member].val
+          
           changeSendBtnColor(song.name)
         }
       }
@@ -41,17 +43,17 @@ const chartObj = (function () {
         show(songs[i])
         btn.classList.add("active")
       })
-      inputs.forEach(input => {
+      txtInputs.forEach(input => {
         input.addEventListener("keydown", inputChangeHandler)
         input.addEventListener("onfocusout", inputChangeHandler)
       })
-      operatorBtns.forEach(btn => {
-        btn.addEventListener("click",changeValHandler)
+      rangeInputs.forEach(input => {
+        input.addEventListener("change",rangeHandler)
       })
-
+    
       sendBtn.addEventListener("click",sendHandler)
     })
-    // document.querySelector("body").addEventListener("mousemove", divExpandHandler)
+    
   }
 
   return { init, addEvListeners, show }
@@ -63,9 +65,6 @@ window.onload = () => {
   chartObj.addEvListeners(songs)
   chartObj.init(dbf)
 }
-
-
-
 
 function resetDivs() {
   divs.forEach(div => {
@@ -81,12 +80,12 @@ function resetButtons() {
   })
 }
 
-
+const allowedKey = ["0","1","2","3","4","5","6","7","8","9"]
 function inputChangeHandler(e) {
   const song = getSong(chart.classList[1])
   const div = e.target.parentElement
   const key = e.code
-  if (key.includes("Digit") || key.includes("Numpad")) {
+  if (key.includes("Digit") || key.includes("Numpad") || allowedKey.includes(key)) {
     song.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
   } else if (key === "Enter") {
     if (e.target.value.includes("%")) {
@@ -105,22 +104,37 @@ function inputChangeHandler(e) {
   }
 }
 
-function changeValHandler(e){
+function rangeHandler(e){
   const song = getSong(chart.classList[1])
-  const div = e.target.parentElement.parentElement
+  const div = e.target.parentElement
+  const member = div.dataset.auth.toLowerCase()
+  const inputVal = parseFloat(this.value)
   let prevSong = JSON.parse(JSON.stringify(song))
-  if(this.innerHTML === "+"){
-    prevSong.prc[div.dataset.auth.toLowerCase()].val+=0.5
-    console.log(song.prc[div.dataset.auth.toLowerCase()])
-    lessThan100(prevSong)?
-      song.prc[div.dataset.auth.toLowerCase()].val+=0.5:
-      null
-  }else{
-    lessThan100(song)
-    song.prc[div.dataset.auth.toLowerCase()].val-=0.5
-  }
+
+  console.log(e.target.value)
+  prevSong.prc[member].val = inputVal
+  lessThan100(prevSong)?
+  song.prc[member].val = inputVal:
+  this.value = song.prc[member].val
   chartObj.show(song)
 }
+
+// function changeValHandler(e){
+//   const song = getSong(chart.classList[1])
+//   const div = e.target.parentElement.parentElement
+//   let prevSong = JSON.parse(JSON.stringify(song))
+//   if(this.innerHTML === "+"){
+//     prevSong.prc[div.dataset.auth.toLowerCase()].val+=0.5
+//     console.log(song.prc[div.dataset.auth.toLowerCase()])
+//     lessThan100(prevSong)?
+//       song.prc[div.dataset.auth.toLowerCase()].val+=0.5:
+//       null
+//   }else{
+//     lessThan100(song)
+//     song.prc[div.dataset.auth.toLowerCase()].val-=0.5
+//   }
+//   chartObj.show(song)
+// }
 
 function sendHandler(e){
   if(confirm("Si acpetas se descargará un archivo con la información que hayas cambiado, mandame ese archivo por el grupo, correo o como prefieras.")){
@@ -128,22 +142,6 @@ function sendHandler(e){
   }
   
 }
-
-//  let prevY = 0
-//  function divExpandHandler(e){
-//   if((e.buttons === 1 || e.type === "click") && e.target.dataset.auth ){
-//     songs.forEach(song => {
-//       if(song.name === chart.classList[1]){
-//         prevY < e.y?
-//         song.prc[e.target.dataset.auth.toLowerCase()].val -= Math.round(e.offsetY/80):
-//         song.prc[e.target.dataset.auth.toLowerCase()].val += Math.round(e.offsetY/80)
-//         chartObj.show(song)
-//       }
-//     })
-//     console.log(e)
-//     prevY = e.y
-//   }
-//  }
 
 function changeSendBtnColor(name){
   const newColor = getComputedStyle(document.documentElement).getPropertyValue(`--${name}`)
@@ -164,8 +162,9 @@ function lessThan100(song) {
   const members = Object.values(song.prc)
   const totalPrc = members.reduce((acc, el) => acc + el.val, 0)
   const prcDisplay = document.querySelector(".percentaje")
-  prcDisplay.innerHTML = `${totalPrc-0.5}%`
+  console.log(totalPrc)
   if (totalPrc <= 100) {
+    prcDisplay.innerHTML = `${totalPrc}%`
     return true
   } else {
     return false
