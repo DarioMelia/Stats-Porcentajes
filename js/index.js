@@ -9,6 +9,20 @@ const txtInputs = document.querySelectorAll("input.prc-input")
 const rangeInputs = document.querySelectorAll("input.slider")
 const sendBtn = document.querySelector(".send-btn")
 
+let songs
+window.onload = () => {
+  fetch("./js/songs.json")
+    .then(res => res.json())
+    .then(json => {
+      songs = json
+      const [dbf] = songs
+      chartObj.addEvListeners(songs)
+      chartObj.init(dbf)
+    })
+}
+
+
+
 const chartObj = (function () {
 
   function init(song) {
@@ -17,24 +31,28 @@ const chartObj = (function () {
 
   function show(song) {
     resetDivs()
-    chart.classList = ["chart"]
-    chart.classList.add(song.name)
+    updateChartTo(song.name)
     divs.forEach(div => {
       for (const member in song.prc) {
         if (div.dataset.auth.toLowerCase() === member) {
           div.classList.contains("none") ? div.classList.remove("none") : null
           div.classList.add("show")
-          div.style.height = `${song.prc[member].val * 8}px`
-          div.dataset.val = song.prc[member].val
-          div.dataset.msg = song.prc[member].msg
-          div.querySelector("input.prc-input").value = `${song.prc[member].val}%`
-          div.querySelector("input.slider").value = song.prc[member].val
+          displayStats(song,member,div)
           changeSendBtnColor(song.name)
-          lessThan100(song)
+          displayPrc(song)
         }
       }
     })
   }
+
+  function displayStats(song,member,div){
+    div.style.height = `${song.prc[member].val * 8}px`
+    div.dataset.val = song.prc[member].val
+    div.dataset.msg = song.prc[member].msg
+    div.querySelector("input.prc-input").value = `${song.prc[member].val}%`
+    div.querySelector("input.slider").value = song.prc[member].val
+  }
+
 
   function addEvListeners(songs) {
     buttons.forEach((btn, i) => {
@@ -48,69 +66,21 @@ const chartObj = (function () {
         input.addEventListener("onfocusout", inputChangeHandler)
       })
       rangeInputs.forEach(input => {
-        input.addEventListener("change", rangeHandler)
+        input.addEventListener("input", rangeHandler)
       })
 
       sendBtn.addEventListener("click", sendHandler)
     })
-
   }
-
-  return { init, addEvListeners, show }
+  return { init, addEvListeners, show, displayStats }
 })()
 
-let songs
-window.onload = () => {
-  fetch("./js/songs.json")
-    .then(res => res.json())
-    .then(json => {
-      songs = json
-      const [dbf] = songs
-      chartObj.addEvListeners(songs)
-      chartObj.init(dbf)
-    })
 
 
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// %%%%%%%%% EVENT HANDLERS %%%%%%%%%
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-}
-
-function resetDivs() {
-  divs.forEach(div => {
-    div.classList.contains("show") ? div.classList.remove("show") : div.classList.remove("none")
-    div.classList.add("none")
-  })
-
-}
-
-function resetButtons() {
-  buttons.forEach(btn => {
-    if (btn.classList.contains("active")) { btn.classList.remove("active") }
-  })
-}
-
-// const allowedKey = ["0","1","2","3","4","5","6","7","8","9"]
-// function inputChangeHandler(e) {
-//   const song = getSong(chart.classList[1])
-//   const div = e.target.parentElement
-//   const key = e.code
-//   if (key.includes("Digit") || key.includes("Numpad") || allowedKey.includes(key)) {
-//     song.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
-//   } else if (key === "Enter") {
-//     if (e.target.value.includes("%")) {
-//       e.target.value.replace("%", "")
-//     }
-//     let prevSong = {...song}
-//     prevSong.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
-//     if (lessThan100(prevSong)) {
-//       song.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
-//       chartObj.show(song)
-//     }
-//   } else if (key.includes("Arrow") || key === "Backspace") {
-//     console.log("Do nothing")
-//   } else {
-//     e.target.value = ""
-//   }
-// }
 function inputChangeHandler(e) {
   const song = getSong(chart.classList[1])
   const div = e.target.parentElement
@@ -118,16 +88,17 @@ function inputChangeHandler(e) {
   let val = this.value
   if (val.includes("%")) {
     val = val.replace("%", "")
-
   }
   if (isNumeric(val)) {
-    let prevSong = { ...song }
+    let prevSong = JSON.parse(JSON.stringify(song))
     prevSong.prc[member].val = parseFloat(val)
     if (lessThan100(prevSong)) {
       song.prc[member].val = parseFloat(val)
-      chartObj.show(song)
+      chartObj.displayStats(song,member,div)
+      displayPrc(song)
     } else {
       alert("Con ese porcentaje superarías el 100%, baja de otro lado")
+      chartObj.displayStats(song,member,div)
     }
   } else {
     alert("Introduce un numero o un porcentaje")
@@ -138,16 +109,16 @@ function rangeHandler(e) {
   const song = getSong(chart.classList[1])
   const div = e.target.parentElement
   const member = div.dataset.auth.toLowerCase()
-  const inputVal = parseFloat(this.value)
+  const inputVal = parseFloat(e.target.value)
   let prevSong = JSON.parse(JSON.stringify(song))
   prevSong.prc[member].val = inputVal
   if (lessThan100(prevSong)) {
+    displayPrc(song)
     song.prc[member].val = inputVal
   } else {
-    this.value = song.prc[member].val
-    alert("Con ese porcentaje superarías el 100%, baja de otro lado")
+    e.target.value = song.prc[member].val
   }
-  chartObj.show(song)
+  chartObj.displayStats(song, member,div)
 }
 
 
@@ -157,32 +128,49 @@ function sendHandler(e) {
   }
 }
 
+
+
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// %%%%%%%%% HELP FUNCS %%%%%%%%%
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function resetDivs() {
+  divs.forEach(div => {
+    div.classList.contains("show") ? div.classList.remove("show") : div.classList.remove("none")
+    div.classList.add("none")
+  })
+}
+function resetButtons() {
+  buttons.forEach(btn => {
+    if (btn.classList.contains("active")) { btn.classList.remove("active") }
+  })
+}
 function changeSendBtnColor(name) {
   const newColor = getComputedStyle(document.documentElement).getPropertyValue(`--${name}`)
   document.documentElement.style
     .setProperty('--send-btn-clr', newColor)
 }
-
 function getSong(name) {
   let selectedSong
-  songs.forEach(song => {
-    if (song.name === name) {
-      selectedSong = song
-    }
-  })
+  songs.forEach(song => song.name===name?selectedSong = song:null)
   return selectedSong
 }
 
 function lessThan100(song) {
+  const totalPrc = getTotalPrc(song)
+  return totalPrc <= 100? true : false
+}
+
+function getTotalPrc(song){
   const members = Object.values(song.prc)
   const totalPrc = members.reduce((acc, el) => acc + el.val, 0)
+  return totalPrc
+}
+
+function displayPrc(song){
+  const totalPrc = getTotalPrc(song)
   const prcDisplay = document.querySelector(".percentaje")
-  if (totalPrc <= 100) {
-    prcDisplay.innerHTML = `${totalPrc}%`
-    return true
-  } else {
-    return false
-  }
+  prcDisplay.innerHTML = `${totalPrc}%`
 }
 
 function download(filename, text) {
@@ -195,6 +183,10 @@ function download(filename, text) {
   document.body.removeChild(element)
 }
 
+function updateChartTo(name){
+  chart.classList = ["chart"]
+  chart.classList.add(name)
+}
 
 function isNumeric(str) {
   if (typeof str != "string") return false 

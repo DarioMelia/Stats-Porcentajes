@@ -60,7 +60,7 @@ nav ul {
   background-color: transparent;
   border: 2px solid transparent;
   border-radius: 2em;
-  color: #757575;
+  color: #8a8a8a;
   cursor: pointer;
   
   font-size: clamp(.4rem,3vw,1.75rem);
@@ -71,15 +71,13 @@ nav ul {
   transition: color 0.3s ease-in-out, border 0.3s ease-in-out;
   user-select: none;
 }
-.button:focus {
-  outline: thin dotted;
-}
+
 
 .active {
   color: #fff;
 }
 .active:nth-child(1) {
-  border-color: #52d6c5;
+  border-color: var(--send-btn-clr);
 }
 .active:nth-child(2) {
   border-color: #bde694;
