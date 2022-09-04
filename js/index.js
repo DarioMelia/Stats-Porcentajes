@@ -44,7 +44,7 @@ const chartObj = (function () {
         btn.classList.add("active")
       })
       txtInputs.forEach(input => {
-        input.addEventListener("keydown", inputChangeHandler)
+        input.addEventListener("change", inputChangeHandler)
         input.addEventListener("onfocusout", inputChangeHandler)
       })
       rangeInputs.forEach(input => {
@@ -88,27 +88,49 @@ function resetButtons() {
   })
 }
 
-const allowedKey = ["0","1","2","3","4","5","6","7","8","9"]
+// const allowedKey = ["0","1","2","3","4","5","6","7","8","9"]
+// function inputChangeHandler(e) {
+//   const song = getSong(chart.classList[1])
+//   const div = e.target.parentElement
+//   const key = e.code
+//   if (key.includes("Digit") || key.includes("Numpad") || allowedKey.includes(key)) {
+//     song.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
+//   } else if (key === "Enter") {
+//     if (e.target.value.includes("%")) {
+//       e.target.value.replace("%", "")
+//     }
+//     let prevSong = {...song}
+//     prevSong.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
+//     if (lessThan100(prevSong)) {
+//       song.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
+//       chartObj.show(song)
+//     }
+//   } else if (key.includes("Arrow") || key === "Backspace") {
+//     console.log("Do nothing")
+//   } else {
+//     e.target.value = ""
+//   }
+// }
 function inputChangeHandler(e) {
   const song = getSong(chart.classList[1])
   const div = e.target.parentElement
-  const key = e.code
-  if (key.includes("Digit") || key.includes("Numpad") || allowedKey.includes(key)) {
-    song.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
-  } else if (key === "Enter") {
-    if (e.target.value.includes("%")) {
-      e.target.value.replace("%", "")
-    }
+  const member = div.dataset.auth.toLowerCase()
+  let val = this.value
+  if (val.includes("%")) {
+     val = val.replace("%","")
+    
+  }
+  if(isNumeric(val)){
     let prevSong = {...song}
-    prevSong.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
+    prevSong.prc[member].val = parseFloat(val)
     if (lessThan100(prevSong)) {
-      song.prc[div.dataset.auth.toLowerCase()].val = parseFloat(e.target.value)
+      song.prc[member].val = parseFloat(val)
       chartObj.show(song)
+    }else{
+      alert("Con ese porcentaje superarías el 100%, baja de otro lado")
     }
-  } else if (key.includes("Arrow") || key === "Backspace") {
-    console.log("Do nothing")
-  } else {
-    e.target.value = ""
+  }else{
+    alert("Introduce un numero o un porcentaje")
   }
 }
 
@@ -190,6 +212,13 @@ function download(filename, text) {
   element.click();
 
   document.body.removeChild(element);
+}
+
+
+function isNumeric(str) {
+  if (typeof str != "string") return false // we only process strings!  
+  return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+         !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
 }
 
 
