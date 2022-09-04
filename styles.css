@@ -91,6 +91,7 @@ nav ul {
   min-height: 200px;
   justify-content: space-around;
   margin: auto;
+  margin-bottom: 1rem;
   width: 100%;
 }
 .chart div {
@@ -271,6 +272,10 @@ footer {
     bottom: -4em;
   }
 
+  .chart{
+    margin-bottom: 3rem;
+  }
+
 }
 
 @media (min-width: 620px) {
@@ -279,6 +284,10 @@ footer {
   }
   .slider{
     bottom: -6em;
+  }
+
+  .chart{
+    margin-bottom: 6rem;
   }
   
 }
