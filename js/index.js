@@ -113,11 +113,11 @@ function rangeHandler(e) {
   let prevSong = JSON.parse(JSON.stringify(song))
   prevSong.prc[member].val = inputVal
   if (lessThan100(prevSong)) {
-    displayPrc(song)
     song.prc[member].val = inputVal
   } else {
     e.target.value = song.prc[member].val
   }
+  displayPrc(song)
   chartObj.displayStats(song, member,div)
 }
 
