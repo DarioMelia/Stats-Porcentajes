@@ -29,8 +29,8 @@ const chartObj = (function () {
           div.dataset.msg = song.prc[member].msg
           div.querySelector("input.prc-input").value = `${song.prc[member].val}%`
           div.querySelector("input.slider").value = song.prc[member].val
-          
           changeSendBtnColor(song.name)
+          lessThan100(song)
         }
       }
     })
@@ -154,28 +154,11 @@ function rangeHandler(e){
   chartObj.show(song)
 }
 
-// function changeValHandler(e){
-//   const song = getSong(chart.classList[1])
-//   const div = e.target.parentElement.parentElement
-//   let prevSong = JSON.parse(JSON.stringify(song))
-//   if(this.innerHTML === "+"){
-//     prevSong.prc[div.dataset.auth.toLowerCase()].val+=0.5
-//     console.log(song.prc[div.dataset.auth.toLowerCase()])
-//     lessThan100(prevSong)?
-//       song.prc[div.dataset.auth.toLowerCase()].val+=0.5:
-//       null
-//   }else{
-//     lessThan100(song)
-//     song.prc[div.dataset.auth.toLowerCase()].val-=0.5
-//   }
-//   chartObj.show(song)
-// }
 
 function sendHandler(e){
   if(confirm("Si acpetas se descargará un archivo con la información que hayas cambiado, mandame ese archivo por el grupo, correo o como prefieras.")){
     download("porcentajesCanciones.txt",JSON.stringify(songs))
   }
-  
 }
 
 function changeSendBtnColor(name){
