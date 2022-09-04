@@ -143,9 +143,14 @@ function rangeHandler(e){
 
   console.log(e.target.value)
   prevSong.prc[member].val = inputVal
-  lessThan100(prevSong)?
-  song.prc[member].val = inputVal:
-  this.value = song.prc[member].val
+  if(lessThan100(prevSong)){
+    song.prc[member].val = inputVal
+  }else{
+    this.value = song.prc[member].val
+    alert("Con ese porcentaje superarías el 100%, baja de otro lado")
+  }
+    
+    
   chartObj.show(song)
 }
 
