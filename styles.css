@@ -149,6 +149,7 @@ nav ul {
   position:absolute;
   -webkit-appearance: none;
   opacity:0;
+  width: 80px;
   background: none;
   bottom: -80px;
   transition: opacity .5s ease-in-out; 
