@@ -22,7 +22,7 @@
    "sergio":{"val":5,"msg":"arreglos"},
    "pablo":{"val":12.5,"msg":"arreglos + grabación"},
    "jaime":{"val":5,"msg":"intérprete"},
-   "fran":{"val":10,"msg":"intérprete + grabación"}}},
+   "fran":{"val":12.5,"msg":"arreglos + grabación"}}},
    {"name":"crazy","prc":{"rodri":{"val":15,"msg":"composición"},
    "diego":{"val":20,"msg":"composición"},
    "dario":{"val":12.5,"msg":"arreglos + letra + grabación"},
@@ -43,11 +43,11 @@
    "fran":{"val":5,"msg":"intérprete"}}},
    {"name":"cp","prc":{"rodri":{"val":7.5,"msg":"arreglos"},
    "dani":{"val":15,"msg":"composición"},
-   "diego":{"val":15,"msg":"arreglos + grabación"},
+   "diego":{"val":12.5,"msg":"arreglos + grabación"},
    "dario":{"val":15,"msg":"arreglos + letra + grabación"},
    "sara":{"val":15,"msg":"arreglos + voz + grabación"},
    "sergio":{"val":5,"msg":"arreglos"},
    "pablo":{"val":12.5,"msg":"arreglos + grabación"},
    "jaime":{"val":5,"msg":"intérprete"},
-   "fran":{"val":10,"msg":"intérprete + grabación"}}}
+   "fran":{"val":12.5,"msg":"arreglos + grabación"}}}
 ]
