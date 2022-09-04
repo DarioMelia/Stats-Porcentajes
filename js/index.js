@@ -59,11 +59,19 @@ const chartObj = (function () {
   return { init, addEvListeners, show }
 })()
 
-
+let songs
 window.onload = () => {
-  const [dbf] = songs
-  chartObj.addEvListeners(songs)
-  chartObj.init(dbf)
+  fetch("./js/songs.json")
+  .then(res => res.json())
+  .then(json => {
+    songs = json
+    const [dbf] = songs
+    chartObj.addEvListeners(songs)
+    chartObj.init(dbf)
+  })
+    
+ 
+ 
 }
 
 function resetDivs() {
