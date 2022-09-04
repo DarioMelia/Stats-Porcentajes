@@ -7,7 +7,7 @@ const divs = chart.querySelectorAll('div')
 const buttons = document.querySelectorAll('nav button')
 const txtInputs = document.querySelectorAll("input.prc-input")
 const rangeInputs = document.querySelectorAll("input.slider")
-const sendBtn= document.querySelector(".send-btn")
+const sendBtn = document.querySelector(".send-btn")
 
 const chartObj = (function () {
 
@@ -48,12 +48,12 @@ const chartObj = (function () {
         input.addEventListener("onfocusout", inputChangeHandler)
       })
       rangeInputs.forEach(input => {
-        input.addEventListener("change",rangeHandler)
+        input.addEventListener("change", rangeHandler)
       })
-    
-      sendBtn.addEventListener("click",sendHandler)
+
+      sendBtn.addEventListener("click", sendHandler)
     })
-    
+
   }
 
   return { init, addEvListeners, show }
@@ -62,16 +62,16 @@ const chartObj = (function () {
 let songs
 window.onload = () => {
   fetch("./js/songs.json")
-  .then(res => res.json())
-  .then(json => {
-    songs = json
-    const [dbf] = songs
-    chartObj.addEvListeners(songs)
-    chartObj.init(dbf)
-  })
-    
- 
- 
+    .then(res => res.json())
+    .then(json => {
+      songs = json
+      const [dbf] = songs
+      chartObj.addEvListeners(songs)
+      chartObj.init(dbf)
+    })
+
+
+
 }
 
 function resetDivs() {
@@ -117,55 +117,52 @@ function inputChangeHandler(e) {
   const member = div.dataset.auth.toLowerCase()
   let val = this.value
   if (val.includes("%")) {
-     val = val.replace("%","")
-    
+    val = val.replace("%", "")
+
   }
-  if(isNumeric(val)){
-    let prevSong = {...song}
+  if (isNumeric(val)) {
+    let prevSong = { ...song }
     prevSong.prc[member].val = parseFloat(val)
     if (lessThan100(prevSong)) {
       song.prc[member].val = parseFloat(val)
       chartObj.show(song)
-    }else{
+    } else {
       alert("Con ese porcentaje superarías el 100%, baja de otro lado")
     }
-  }else{
+  } else {
     alert("Introduce un numero o un porcentaje")
   }
 }
 
-function rangeHandler(e){
+function rangeHandler(e) {
   const song = getSong(chart.classList[1])
   const div = e.target.parentElement
   const member = div.dataset.auth.toLowerCase()
   const inputVal = parseFloat(this.value)
   let prevSong = JSON.parse(JSON.stringify(song))
-
-  console.log(e.target.value)
   prevSong.prc[member].val = inputVal
-  if(lessThan100(prevSong)){
+  if (lessThan100(prevSong)) {
     song.prc[member].val = inputVal
-  }else{
+  } else {
     this.value = song.prc[member].val
     alert("Con ese porcentaje superarías el 100%, baja de otro lado")
   }
-    
-    
   chartObj.show(song)
 }
 
 
-function sendHandler(e){
-  if(confirm("Si acpetas se descargará un archivo con la información que hayas cambiado, mandame ese archivo por el grupo, correo o como prefieras.")){
-    download("porcentajesCanciones.txt",JSON.stringify(songs))
+function sendHandler(e) {
+  if (confirm("Si acpetas se descargará un archivo con la información que hayas cambiado, mandame ese archivo por el grupo, correo o como prefieras.")) {
+    download("porcentajesCanciones.txt", JSON.stringify(songs))
   }
 }
 
-function changeSendBtnColor(name){
+function changeSendBtnColor(name) {
   const newColor = getComputedStyle(document.documentElement).getPropertyValue(`--${name}`)
   document.documentElement.style
     .setProperty('--send-btn-clr', newColor)
 }
+
 function getSong(name) {
   let selectedSong
   songs.forEach(song => {
@@ -180,7 +177,6 @@ function lessThan100(song) {
   const members = Object.values(song.prc)
   const totalPrc = members.reduce((acc, el) => acc + el.val, 0)
   const prcDisplay = document.querySelector(".percentaje")
-  console.log(totalPrc)
   if (totalPrc <= 100) {
     prcDisplay.innerHTML = `${totalPrc}%`
     return true
@@ -190,23 +186,20 @@ function lessThan100(song) {
 }
 
 function download(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
+  var element = document.createElement('a')
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
+  element.setAttribute('download', filename)
+  element.style.display = 'none'
+  document.body.appendChild(element)
+  element.click()
+  document.body.removeChild(element)
 }
 
 
 function isNumeric(str) {
-  if (typeof str != "string") return false // we only process strings!  
-  return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-         !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+  if (typeof str != "string") return false 
+  return !isNaN(str) && 
+    !isNaN(parseFloat(str)) 
 }
 
 

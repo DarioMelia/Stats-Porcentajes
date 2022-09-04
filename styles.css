@@ -124,6 +124,7 @@ nav ul {
 
 .chart div::before{
   opacity:0;
+  pointer-events: none;
   top: 0;
   transition: opacity .5s ease-in-out; 
   border-radius: 2px;
@@ -134,6 +135,7 @@ nav ul {
   content: attr(data-msg);
 }
 .chart div:hover::before{
+  pointer-events: all;
   opacity:1;
   z-index: 20;
 }
